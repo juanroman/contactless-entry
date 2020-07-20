@@ -21,6 +21,7 @@ dotnet_csproj:
   file_version: '{version}'
   informational_version: '{version}'
 before_build:
+  - ps: iex ((New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/appveyor/secure-file/master/install.ps1'))
   - cmd: dotnet --version
   - cmd: dotnet new tool-manifest
   - cmd: dotnet tool install dotnet-sonarscanner
