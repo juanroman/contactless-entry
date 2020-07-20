@@ -29,6 +29,7 @@ build_script:
   - cmd: dotnet build ./src/ContactlessEntry.Cloud/ContactlessEntry.Cloud.csproj --verbosity m
 test_script:
   # set environment variables
+  - cmd: dir ./src/ContactlessEntry.Cloud
   - cmd: appveyor-tools\secure-file -decrypt ./src/ContactlessEntry.Cloud/appsettings.Development.json.enc -secret %dev_settings_secret% -salt %dev_settings_salt%
   - cmd: dir ./src/ContactlessEntry.Cloud
   # restore packages for our unit tests
