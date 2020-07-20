@@ -1,0 +1,32 @@
+version: 1.0.{build}
+image: Visual Studio 2019
+branches:
+  only:
+  - master
+init:
+  # Good practise, because Windows line endings are different from Unix/Linux ones
+  - cmd: git config --global core.autocrlf true
+dotnet_csproj:
+  patch: true
+  file: '**\*.csproj'
+  version: '{version}'
+  version_prefix: '{version}'
+  package_version: '{version}'
+  assembly_version: '{version}'
+  file_version: '{version}'
+  informational_version: '{version}'
+before_build:
+  - cmd: dotnet --version
+  - cmd: dotnet new tool-manifest
+  - cmd: dotnet tool install dotnet-sonarscanner
+build_script:
+  - cmd: dotnet restore ./src/ContactlessEntry.Cloud/ContactlessEntry.Cloud.csproj --verbosity m
+  - cmd: dotnet build ./src/ContactlessEntry.Cloud/ContactlessEntry.Cloud.csproj --verbosity m
+test_script:
+  # restore packages for our unit tests
+  - cmd: dotnet restore ./tests/ContactlessEntry.Cloud.UnitTests/ContactlessEntry.Cloud.UnitTests.csproj --verbosity m
+  - cmd: dotnet dotnet-sonarscanner begin /k:juanroman_contactless-entry /o:juanroman /d:sonar.cs.opencover.reportsPaths=**/coverage.opencover.xml -d:sonar.cs.vstest.reportsPaths=**/*.trx /d:sonar.host.url=https://sonarcloud.io /d:sonar.login=e7287d0d2ec57beb59053691d2cc2efcac9d431d
+  - cmd: dotnet build ./ContactlessEntry.sln
+  - cmd: dotnet test ./tests/ContactlessEntry.Cloud.UnitTests/ContactlessEntry.Cloud.UnitTests.csproj /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+  - cmd: dotnet dotnet-sonarscanner end /d:sonar.login=e7287d0d2ec57beb59053691d2cc2efcac9d431d
+deploy: off
