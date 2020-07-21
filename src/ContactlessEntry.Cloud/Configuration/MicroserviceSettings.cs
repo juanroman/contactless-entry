@@ -9,5 +9,9 @@
         public string FaceSubscriptionKey { get; set; }
 
         public string RecognitionModel { get; set; }
+
+        public string JwtKey { get; set; }
+
+        public string JwtIssuer { get; set; }
     }
 }

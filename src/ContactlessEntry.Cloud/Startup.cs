@@ -45,9 +45,9 @@ namespace ContactlessEntry.Cloud
                         ValidateIssuer = true,
                         ValidateIssuerSigningKey = true,
                         ValidateLifetime = true,
-                        ValidAudience = Configuration["Jwt:Issuer"],
-                        ValidIssuer = Configuration["Jwt:Issuer"],
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
+                        ValidAudience = Configuration["MicroserviceSettings:JwtIssuer"],
+                        ValidIssuer = Configuration["MicroserviceSettings:JwtIssuer"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["MicroserviceSettings:JwtKey"]))
                     };
                 });
 

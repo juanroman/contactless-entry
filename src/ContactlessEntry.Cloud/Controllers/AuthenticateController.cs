@@ -1,8 +1,8 @@
-﻿using ContactlessEntry.Cloud.Models.DataTransfer;
+﻿using ContactlessEntry.Cloud.Configuration;
+using ContactlessEntry.Cloud.Models.DataTransfer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IdentityModel.Tokens.Jwt;
@@ -17,9 +17,9 @@ namespace ContactlessEntry.Cloud.Controllers
     [Produces(MediaTypeNames.Application.Json)]
     public sealed class AuthenticateController : ControllerBase
     {
-        private readonly IConfiguration _configuration;
+        private readonly IMicroserviceSettings _microserviceSettings;
 
-        public AuthenticateController(IConfiguration configuration) => _configuration = configuration;
+        public AuthenticateController(IMicroserviceSettings microserviceSettings) => _microserviceSettings = microserviceSettings;
 
         /// <summary>
         /// Authenticates a set of API Credentials and generates a JWT Token.
@@ -27,7 +27,7 @@ namespace ContactlessEntry.Cloud.Controllers
         /// <param name="dto">The <c>API Credentials</c> DTO.</param>
         /// <response code="200">When the request is handled successfully.</response>
         /// <response code="400">When the DTO is invalid.</response>
-        /// <response code="400">When the request is not properly authenticated.</response>
+        /// <response code="401">When the request is not properly authenticated.</response>
         [AllowAnonymous]
         [HttpPost]
         [ProducesResponseType(typeof(AuthenticateResponseDto), StatusCodes.Status200OK)]
@@ -45,11 +45,10 @@ namespace ContactlessEntry.Cloud.Controllers
                 return Unauthorized();
             }
 
-            var issuer = _configuration["Jwt:Issuer"];
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_microserviceSettings.JwtKey));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
-            var token = new JwtSecurityToken(issuer, issuer, null, expires: DateTime.Now.AddMinutes(90), signingCredentials: credentials);
+            var token = new JwtSecurityToken(_microserviceSettings.JwtIssuer, _microserviceSettings.JwtIssuer, null, expires: DateTime.Now.AddMinutes(90), signingCredentials: credentials);
 
             return Ok(new AuthenticateResponseDto
             {
