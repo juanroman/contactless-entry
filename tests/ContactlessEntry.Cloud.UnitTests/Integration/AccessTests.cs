@@ -1,4 +1,5 @@
 using ContactlessEntry.Cloud.Models.DataTransfer;
+using ContactlessEntry.Cloud.UnitTests.Utilities;
 using Microsoft.AspNetCore.Mvc.Testing;
 using System;
 using System.Net;
@@ -11,7 +12,7 @@ namespace ContactlessEntry.Cloud.UnitTests.Integration
 {
     public class RequestAccessTests : IntegrationTestBase
     {
-        public RequestAccessTests(ITestOutputHelper outputHelper, WebApplicationFactory<Startup> factory) : base(outputHelper, factory)
+        public RequestAccessTests(ITestOutputHelper outputHelper, TestWebApplicationFactory<Startup> factory) : base(outputHelper, factory)
         {
         }
 
@@ -129,6 +130,8 @@ namespace ContactlessEntry.Cloud.UnitTests.Integration
             });
 
             Assert.NotNull(access);
+
+            await DeleteCognitiveServicesGroup();
         }
     }
 }

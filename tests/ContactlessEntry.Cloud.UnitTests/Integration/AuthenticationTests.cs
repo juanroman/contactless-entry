@@ -1,4 +1,5 @@
 ﻿using ContactlessEntry.Cloud.Models.DataTransfer;
+using ContactlessEntry.Cloud.UnitTests.Utilities;
 using Microsoft.AspNetCore.Mvc.Testing;
 using System;
 using System.Threading.Tasks;
@@ -9,24 +10,24 @@ namespace ContactlessEntry.Cloud.UnitTests.Integration
 {
     public class AuthenticationTests : IntegrationTestBase
     {
-        public AuthenticationTests(ITestOutputHelper outputHelper, WebApplicationFactory<Startup> factory) : base(outputHelper, factory)
+        public AuthenticationTests(ITestOutputHelper outputHelper, TestWebApplicationFactory<Startup> factory) : base(outputHelper, factory)
         {
         }
 
         [Fact]
-        public async Task Authenticate_WithInvalidApiCredentials_ReturnsBadRequest()
-        {
-
-        }
-
-        [Fact]
-        public async Task Authenticate_WithMissingApiKey_ReturnsBadRequest()
+        public void Authenticate_WithInvalidApiCredentials_ReturnsBadRequest()
         {
 
         }
 
         [Fact]
-        public async Task Authenticate_WithMissingApiSecret_ReturnsBadRequest()
+        public void Authenticate_WithMissingApiKey_ReturnsBadRequest()
+        {
+
+        }
+
+        [Fact]
+        public void Authenticate_WithMissingApiSecret_ReturnsBadRequest()
         {
 
         }

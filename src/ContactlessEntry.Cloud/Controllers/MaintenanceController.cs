@@ -117,6 +117,22 @@ namespace ContactlessEntry.Cloud.Controllers
             }
         }
 
+        [HttpPost("training")]
+        public async Task<IActionResult> BeginTrainingAsync()
+        {
+            try
+            {
+                await _faceClientService.BeginTrainingAsync();
+
+                return Ok();
+            }
+            catch (Exception exception)
+            {
+                _logger.LogError(exception, "Failed to begin training within cognitive servcices.");
+                throw;
+            }
+        }
+
         [HttpGet("training")]
         [ProducesResponseType(typeof(TrainingStatus), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]

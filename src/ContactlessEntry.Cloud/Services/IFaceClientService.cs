@@ -18,6 +18,8 @@ namespace ContactlessEntry.Cloud.Services
 
         Task RemoveFaceAsync(string personId, string faceId);
 
+        Task BeginTrainingAsync();
+
         Task<TrainingStatus> GetTrainingStatusAsync();
     }
 }

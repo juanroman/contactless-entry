@@ -15,7 +15,7 @@ namespace ContactlessEntry.Cloud.Services
 {
     public class FaceClientService : IFaceClientService
     {
-        private const string PersonGroupId = "compas";
+        public const string PersonGroupId = "compas";
 
         private readonly IFaceClient _faceClient;
         private readonly ILogger<FaceClientService> _logger;
@@ -70,12 +70,34 @@ namespace ContactlessEntry.Cloud.Services
             return recognizedCandidateList;
         }
 
-        public async Task<TrainingStatus> GetTrainingStatusAsync()
+        public async Task BeginTrainingAsync()
         {
             await EnsurePersonGroupCreated();
 
-            _logger.LogDebug("Fetching Training Status from Azure Cognitive Services.");
-            return await _faceClient.PersonGroup.GetTrainingStatusAsync(PersonGroupId);
+            await _faceClient.PersonGroup.TrainAsync(PersonGroupId);
+
+        }
+
+        public async Task<TrainingStatus> GetTrainingStatusAsync()
+        {
+            try
+            {
+                await EnsurePersonGroupCreated();
+
+                _logger.LogDebug("Fetching Training Status from Azure Cognitive Services.");
+                return await _faceClient.PersonGroup.GetTrainingStatusAsync(PersonGroupId);
+            }
+            catch (APIErrorException apiErrorException)
+            {
+                if (HttpStatusCode.NotFound == apiErrorException.Response.StatusCode)
+                {
+                    return new TrainingStatus();
+                }
+                else
+                {
+                    throw;
+                }
+            }
         }
 
         public async Task<Models.Person> CreatePersonAsync(string name, string faceUrl)
@@ -103,7 +125,7 @@ namespace ContactlessEntry.Cloud.Services
             }
 
             _logger.LogDebug("Starting training after adding person and face in Azure Cognitive Services.");
-            await _faceClient.PersonGroup.TrainAsync(PersonGroupId);
+            //await _faceClient.PersonGroup.TrainAsync(PersonGroupId);
 
             return new Models.Person
             {
@@ -129,7 +151,7 @@ namespace ContactlessEntry.Cloud.Services
             await _faceClient.PersonGroupPerson.DeleteAsync(PersonGroupId, personGuid);
 
             _logger.LogDebug("Starting training after removing person from Azure Cognitive Services.");
-            await _faceClient.PersonGroup.TrainAsync(PersonGroupId);
+            // await _faceClient.PersonGroup.TrainAsync(PersonGroupId);
         }
 
         public async Task<Face> AddFaceAsync(string personId, string faceUrl)
@@ -156,7 +178,7 @@ namespace ContactlessEntry.Cloud.Services
             if (null != persistedFace)
             {
                 _logger.LogDebug("Starting training after removing person from Azure Cognitive Services.");
-                await _faceClient.PersonGroup.TrainAsync(PersonGroupId);
+                //await _faceClient.PersonGroup.TrainAsync(PersonGroupId);
 
                 return new Face
                 {
@@ -195,7 +217,7 @@ namespace ContactlessEntry.Cloud.Services
             await _faceClient.PersonGroupPerson.DeleteFaceAsync(PersonGroupId, personGuid, faceGuid);
 
             _logger.LogDebug("Starting training after removing face from Azure Cognitive Services.");
-            await _faceClient.PersonGroup.TrainAsync(PersonGroupId);
+            //await _faceClient.PersonGroup.TrainAsync(PersonGroupId);
         }
 
         private async Task EnsurePersonGroupCreated()
