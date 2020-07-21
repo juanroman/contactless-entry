@@ -45,23 +45,16 @@ namespace ContactlessEntry.Cloud.Controllers
                 return Unauthorized();
             }
 
-            try
-            {
-                var issuer = _configuration["Jwt:Issuer"];
-                var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
-                var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+            var issuer = _configuration["Jwt:Issuer"];
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
-                var token = new JwtSecurityToken(issuer, issuer, null, expires: DateTime.Now.AddMinutes(90), signingCredentials: credentials);
+            var token = new JwtSecurityToken(issuer, issuer, null, expires: DateTime.Now.AddMinutes(90), signingCredentials: credentials);
 
-                return Ok(new AuthenticateResponseDto
-                {
-                    Token = new JwtSecurityTokenHandler().WriteToken(token)
-                });
-            }
-            catch
+            return Ok(new AuthenticateResponseDto
             {
-                return Unauthorized();
-            }
+                Token = new JwtSecurityTokenHandler().WriteToken(token)
+            });
         }
     }
 }

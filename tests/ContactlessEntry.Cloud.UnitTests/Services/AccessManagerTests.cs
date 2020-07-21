@@ -42,5 +42,70 @@ namespace ContactlessEntry.Cloud.UnitTests.Services
             Assert.NotNull(access);
             Assert.True(access.Granted);
         }
+
+        [Fact]
+        public async Task RequestAccessAsync_WithoutDoorId_ThrowsArgumentNullException()
+        {
+            IAccessManager accessManager = new AccessManager(Mock.Of<ILogger<AccessManager>>(), Mock.Of<IOpenDoorService>(), Mock.Of<IAccessRepository>(), Mock.Of<IMicroserviceSettings>());
+            await Assert.ThrowsAsync<ArgumentNullException>(async () =>
+            {
+                await accessManager.RequestAccessAsync(null, $"{Guid.NewGuid()}", 0);
+            });
+        }
+
+        [Fact]
+        public async Task RequestAccessAsync_WithoutPersonId_ThrowsArgumentNullException()
+        {
+            IAccessManager accessManager = new AccessManager(Mock.Of<ILogger<AccessManager>>(), Mock.Of<IOpenDoorService>(), Mock.Of<IAccessRepository>(), Mock.Of<IMicroserviceSettings>());
+            await Assert.ThrowsAsync<ArgumentNullException>(async () =>
+            {
+                await accessManager.RequestAccessAsync($"{Guid.NewGuid()}", null, 0);
+            });
+        }
+
+        [Fact]
+        public async Task RequestAccessAsync_WithHighTemperature_DeniesAccess()
+        {
+            var logger = _loggerFactory.CreateLogger<AccessManager>();
+            var mockOpenDoor = Mock
+                .Of<IOpenDoorService>();
+
+            var mockAccessRepository = new Mock<IAccessRepository>();
+            mockAccessRepository
+                .Setup(ar => ar.CreateAccessAsync(It.IsNotNull<Access>()))
+                .Returns((Access input) => Task.FromResult(input));
+
+            var mockMicroserviceSettings = Mock
+                .Of<MicroserviceSettings>(ms => ms.MaxAllowedTemperature == 37.9);
+
+            IAccessManager accessManager = new AccessManager(logger, mockOpenDoor, mockAccessRepository.Object, mockMicroserviceSettings);
+
+            var access = await accessManager.RequestAccessAsync($"{Guid.NewGuid()}", $"{Guid.NewGuid()}", 38);
+            Assert.NotNull(access);
+            Assert.False(access.Granted);
+        }
+
+        [Fact]
+        public async Task RequestAccessAsync_WithExceptionInRepository_ThrowsException()
+        {
+            var logger = _loggerFactory.CreateLogger<AccessManager>();
+            var mockOpenDoor = Mock
+                .Of<IOpenDoorService>();
+
+            var mockAccessRepository = new Mock<IAccessRepository>();
+            mockAccessRepository
+                .Setup(ar => ar.CreateAccessAsync(It.IsNotNull<Access>()))
+                .Throws<NotImplementedException>();
+
+            var mockMicroserviceSettings = Mock
+                .Of<MicroserviceSettings>(ms => ms.MaxAllowedTemperature == 37.9);
+
+            IAccessManager accessManager = new AccessManager(logger, mockOpenDoor, mockAccessRepository.Object, mockMicroserviceSettings);
+            await Assert.ThrowsAsync<NotImplementedException>(async () =>
+            {
+                await accessManager.RequestAccessAsync($"{Guid.NewGuid()}", $"{Guid.NewGuid()}", 38);
+            });
+            
+        }
     }
 }
