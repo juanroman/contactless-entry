@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Logging;
-using Microsoft.OpenApi.Models;
 using System;
 using System.IO;
 using System.Net;

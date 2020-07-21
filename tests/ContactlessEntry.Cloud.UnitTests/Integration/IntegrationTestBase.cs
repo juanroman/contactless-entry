@@ -1,9 +1,7 @@
 ﻿using ContactlessEntry.Cloud.Configuration;
-using ContactlessEntry.Cloud.Models;
 using ContactlessEntry.Cloud.Models.DataTransfer;
 using ContactlessEntry.Cloud.UnitTests.Utilities;
 using Divergic.Logging.Xunit;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Azure.CognitiveServices.Vision.Face;
 using Microsoft.Azure.CognitiveServices.Vision.Face.Models;
 using Microsoft.Extensions.Configuration;

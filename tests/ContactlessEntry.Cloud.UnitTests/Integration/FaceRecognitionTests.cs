@@ -5,7 +5,6 @@ using ContactlessEntry.Cloud.UnitTests.Utilities;
 using Divergic.Logging.Xunit;
 using Microsoft.Extensions.Configuration;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Xunit;

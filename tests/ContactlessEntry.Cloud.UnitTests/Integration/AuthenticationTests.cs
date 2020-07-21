@@ -1,6 +1,5 @@
 ﻿using ContactlessEntry.Cloud.Models.DataTransfer;
 using ContactlessEntry.Cloud.UnitTests.Utilities;
-using Microsoft.AspNetCore.Mvc.Testing;
 using System;
 using System.Threading.Tasks;
 using Xunit;

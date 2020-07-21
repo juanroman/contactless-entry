@@ -1,7 +1,4 @@
-﻿using ContactlessEntry.Cloud.Models.DataTransfer;
-using ContactlessEntry.Cloud.UnitTests.Utilities;
-using Microsoft.Azure.CognitiveServices.Vision.Face.Models;
-using System;
+﻿using ContactlessEntry.Cloud.UnitTests.Utilities;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
