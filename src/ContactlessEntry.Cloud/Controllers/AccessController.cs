@@ -40,7 +40,7 @@ namespace ContactlessEntry.Cloud.Controllers
         /// <response code="400">When the request is not properly authenticated.</response>
         /// <response code="500">When an error occurs in the service.</response>
         [HttpPost("request")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(AccessDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> RequestAccessAsync([FromBody] RequestAccessDto dto)

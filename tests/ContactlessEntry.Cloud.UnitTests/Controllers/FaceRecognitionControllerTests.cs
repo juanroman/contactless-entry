@@ -1,5 +1,5 @@
 ﻿using ContactlessEntry.Cloud.Controllers;
-using ContactlessEntry.Cloud.Models;
+using ContactlessEntry.Cloud.Models.DataTransfer;
 using ContactlessEntry.Cloud.Services;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
@@ -18,18 +18,18 @@ namespace ContactlessEntry.Cloud.UnitTests.Controllers
         [Fact]
         public async Task RecognizeWithStreamAsync_WithCorrectInput_ReturnsOk()
         {
-            var list = new List<RecognizedCandidate>
+            var list = new List<RecognizedCandidateDto>
             {
-                new RecognizedCandidate { Confidence = 0.54, PersonId = $"{Guid.NewGuid()}" },
-                new RecognizedCandidate { Confidence = 0.99, PersonId = $"{Guid.NewGuid()}" },
-                new RecognizedCandidate { Confidence = 0.89, PersonId = $"{Guid.NewGuid()}" }
+                new RecognizedCandidateDto { Confidence = 0.54, PersonId = $"{Guid.NewGuid()}" },
+                new RecognizedCandidateDto { Confidence = 0.99, PersonId = $"{Guid.NewGuid()}" },
+                new RecognizedCandidateDto { Confidence = 0.89, PersonId = $"{Guid.NewGuid()}" }
             };
 
             var mockLogger = Mock.Of<ILogger<FaceRecognitionController>>();
             var mockFaceClientService = new Mock<IFaceClientService>();
             mockFaceClientService
                 .Setup(service => service.RecognizeWithStreamAsync(It.IsNotNull<Stream>()))
-                .Returns(() => Task.FromResult((IList<RecognizedCandidate>)list));
+                .Returns(() => Task.FromResult((IList<RecognizedCandidateDto>)list));
 
             using var stream = File.OpenRead("jrtest.jpg");
             var controller = new FaceRecognitionController(mockFaceClientService.Object, mockLogger);
@@ -38,7 +38,7 @@ namespace ContactlessEntry.Cloud.UnitTests.Controllers
             Assert.NotNull(actionResult);
             var okObjectResult = Assert.IsAssignableFrom<OkObjectResult>(actionResult);
 
-            var result = Assert.IsAssignableFrom<IList<RecognizedCandidate>>(okObjectResult.Value);
+            var result = Assert.IsAssignableFrom<IList<RecognizedCandidateDto>>(okObjectResult.Value);
             list.Should().NotBeEmpty()
                 .And.BeEquivalentTo(result);
         }
@@ -58,7 +58,7 @@ namespace ContactlessEntry.Cloud.UnitTests.Controllers
             Assert.NotNull(actionResult);
             var okObjectResult = Assert.IsAssignableFrom<OkObjectResult>(actionResult);
 
-            var result = Assert.IsAssignableFrom<IList<RecognizedCandidate>>(okObjectResult.Value);
+            var result = Assert.IsAssignableFrom<IList<RecognizedCandidateDto>>(okObjectResult.Value);
             Assert.NotNull(result);
             Assert.Empty(result);
         }

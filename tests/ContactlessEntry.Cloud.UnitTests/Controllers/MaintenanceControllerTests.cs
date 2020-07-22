@@ -1,6 +1,7 @@
 ﻿using ContactlessEntry.Cloud.Controllers;
 using ContactlessEntry.Cloud.Models.DataTransfer;
 using ContactlessEntry.Cloud.Services;
+using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.CognitiveServices.Vision.Face.Models;
 using Microsoft.Extensions.Logging;
@@ -32,7 +33,7 @@ namespace ContactlessEntry.Cloud.UnitTests.Controllers
             var mockFaceClientService = new Mock<IFaceClientService>();
             mockFaceClientService
                 .Setup(service => service.CreatePersonAsync(It.IsNotNull<string>(), It.IsNotNull<string>()))
-                .Returns(() => Task.FromResult(new Models.Person { PersonId = $"{Guid.NewGuid()}" }));
+                .Returns(() => Task.FromResult(new Cloud.Models.Person { PersonId = $"{Guid.NewGuid()}" }));
 
             var dto = new NewPersonDto
             {
@@ -45,7 +46,9 @@ namespace ContactlessEntry.Cloud.UnitTests.Controllers
             Assert.NotNull(actionResult);
 
             var okObjectResult = Assert.IsAssignableFrom<OkObjectResult>(actionResult);
-            Assert.IsAssignableFrom<Models.Person>(okObjectResult.Value);
+            var person = Assert.IsAssignableFrom<Cloud.Models.Person>(okObjectResult.Value);
+            person.Should().NotBeNull();
+            person.PersonId.Should().NotBeNullOrWhiteSpace();
         }
 
         [Fact]
@@ -206,7 +209,7 @@ namespace ContactlessEntry.Cloud.UnitTests.Controllers
             var mockFaceClientService = new Mock<IFaceClientService>();
             mockFaceClientService
                 .Setup(service => service.AddFaceAsync(It.IsNotNull<string>(), It.IsNotNull<string>()))
-                .Returns(() => Task.FromResult(new Models.Face { FaceId = $"{Guid.NewGuid()}" }));
+                .Returns(() => Task.FromResult(new Cloud.Models.Face { FaceId = $"{Guid.NewGuid()}" }));
 
             var dto = new FaceDto
             {
@@ -218,7 +221,9 @@ namespace ContactlessEntry.Cloud.UnitTests.Controllers
             Assert.NotNull(actionResult);
 
             var okObjectResult = Assert.IsAssignableFrom<OkObjectResult>(actionResult);
-            Assert.IsAssignableFrom<Models.Face>(okObjectResult.Value);
+            var face = Assert.IsAssignableFrom<Cloud.Models.Face>(okObjectResult.Value);
+            face.Should().NotBeNull();
+            face.FaceId.Should().NotBeNullOrWhiteSpace();
         }
 
         [Fact]

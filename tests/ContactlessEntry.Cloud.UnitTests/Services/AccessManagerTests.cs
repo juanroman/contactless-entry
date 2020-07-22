@@ -2,6 +2,7 @@
 using ContactlessEntry.Cloud.Models;
 using ContactlessEntry.Cloud.Services;
 using Divergic.Logging.Xunit;
+using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
 using System;
@@ -39,8 +40,12 @@ namespace ContactlessEntry.Cloud.UnitTests.Services
             IAccessManager accessManager = new AccessManager(logger, mockOpenDoor, mockAccessRepository.Object, mockMicroserviceSettings);
 
             var access = await accessManager.RequestAccessAsync($"{Guid.NewGuid()}", $"{Guid.NewGuid()}", 37.1d);
-            Assert.NotNull(access);
-            Assert.True(access.Granted);
+            access.Should().NotBeNull();
+            access.DoorId.Should().NotBeNullOrEmpty();
+            access.Granted.Should().BeTrue();
+            access.PersonId.Should().NotBeNullOrWhiteSpace();
+            access.Temperature.Should().BeGreaterThan(0);
+            access.Timestamp.Should().BeAfter(DateTime.MinValue);
         }
 
         [Fact]
@@ -81,8 +86,12 @@ namespace ContactlessEntry.Cloud.UnitTests.Services
             IAccessManager accessManager = new AccessManager(logger, mockOpenDoor, mockAccessRepository.Object, mockMicroserviceSettings);
 
             var access = await accessManager.RequestAccessAsync($"{Guid.NewGuid()}", $"{Guid.NewGuid()}", 38);
-            Assert.NotNull(access);
-            Assert.False(access.Granted);
+            access.Should().NotBeNull();
+            access.DoorId.Should().NotBeNullOrEmpty();
+            access.Granted.Should().BeFalse();
+            access.PersonId.Should().NotBeNullOrWhiteSpace();
+            access.Temperature.Should().BeGreaterThan(0);
+            access.Timestamp.Should().BeAfter(DateTime.MinValue);
         }
 
         [Fact]

@@ -8,7 +8,7 @@ namespace ContactlessEntry.Cloud.Models
 
         public string PersonId { get; set; }
 
-        public double Temerature { get; set; }
+        public double Temperature { get; set; }
 
         public bool Granted { get; set; }
 

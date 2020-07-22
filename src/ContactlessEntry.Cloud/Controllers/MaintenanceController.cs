@@ -117,7 +117,7 @@ namespace ContactlessEntry.Cloud.Controllers
             }
         }
 
-        [HttpPost("training")]
+        [HttpPost("train")]
         public async Task<IActionResult> BeginTrainingAsync()
         {
             try

@@ -1,5 +1,6 @@
 ﻿using ContactlessEntry.Cloud.Configuration;
 using ContactlessEntry.Cloud.Models;
+using ContactlessEntry.Cloud.Models.DataTransfer;
 using Microsoft.Azure.CognitiveServices.Vision.Face;
 using Microsoft.Azure.CognitiveServices.Vision.Face.Models;
 using Microsoft.Extensions.Logging;
@@ -30,7 +31,7 @@ namespace ContactlessEntry.Cloud.Services
             _microserviceSettings = microserviceSettings;
         }
 
-        public Task<IList<RecognizedCandidate>> RecognizeWithStreamAsync(Stream image)
+        public Task<IList<RecognizedCandidateDto>> RecognizeWithStreamAsync(Stream image)
         {
             if (null == image)
             {
@@ -40,9 +41,9 @@ namespace ContactlessEntry.Cloud.Services
             return RecognizeWithStreamImplementation(image);
         }
 
-        private async Task<IList<RecognizedCandidate>> RecognizeWithStreamImplementation(Stream image)
+        private async Task<IList<RecognizedCandidateDto>> RecognizeWithStreamImplementation(Stream image)
         {
-            var recognizedCandidateList = new List<RecognizedCandidate>();
+            var recognizedCandidateList = new List<RecognizedCandidateDto>();
 
             var detectedFaces = await _faceClient.Face.DetectWithStreamAsync(image, true, true, null, _microserviceSettings.RecognitionModel);
             if (null != detectedFaces)
@@ -58,7 +59,7 @@ namespace ContactlessEntry.Cloud.Services
                     {
                         foreach (var candidate in potentialUsers.Select(identifyResult => identifyResult.Candidates.FirstOrDefault()))
                         {
-                            recognizedCandidateList.Add(new RecognizedCandidate
+                            recognizedCandidateList.Add(new RecognizedCandidateDto
                             {
                                 Confidence = candidate.Confidence,
                                 PersonId = $"{candidate.PersonId}"

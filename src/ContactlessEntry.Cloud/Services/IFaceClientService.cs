@@ -1,4 +1,5 @@
 ﻿using ContactlessEntry.Cloud.Models;
+using ContactlessEntry.Cloud.Models.DataTransfer;
 using Microsoft.Azure.CognitiveServices.Vision.Face.Models;
 using System.Collections.Generic;
 using System.IO;
@@ -8,7 +9,7 @@ namespace ContactlessEntry.Cloud.Services
 {
     public interface IFaceClientService
     {
-        Task<IList<RecognizedCandidate>> RecognizeWithStreamAsync(Stream image);
+        Task<IList<RecognizedCandidateDto>> RecognizeWithStreamAsync(Stream image);
 
         Task<Models.Person> CreatePersonAsync(string name, string faceUrl);
 

@@ -1,6 +1,7 @@
-﻿using ContactlessEntry.Cloud.Models;
+﻿using ContactlessEntry.Cloud.Models.DataTransfer;
 using ContactlessEntry.Cloud.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -31,6 +32,9 @@ namespace ContactlessEntry.Cloud.Controllers
         }
 
         [HttpPost]
+        [ProducesResponseType(typeof(List<RecognizedCandidateDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> RecognizeWithStreamAsync([FromBody] Stream image)
         {
             try
@@ -49,7 +53,7 @@ namespace ContactlessEntry.Cloud.Controllers
                 }
                 else
                 {
-                    return Ok(new List<RecognizedCandidate>());
+                    return Ok(new List<RecognizedCandidateDto>());
                 }
             }
             catch (Exception exception)

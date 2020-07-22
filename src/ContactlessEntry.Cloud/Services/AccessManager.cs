@@ -71,7 +71,7 @@ namespace ContactlessEntry.Cloud.Services
                     DoorId = doorId,
                     Granted = granted,
                     PersonId = personId,
-                    Temerature = temperature,
+                    Temperature = temperature,
                     Timestamp = DateTime.UtcNow
                 };
 

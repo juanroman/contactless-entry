@@ -1,6 +1,6 @@
-﻿namespace ContactlessEntry.Cloud.Models
+﻿namespace ContactlessEntry.Cloud.Models.DataTransfer
 {
-    public class RecognizedCandidate
+    public class RecognizedCandidateDto
     {
         public string PersonId { get; set; }
 
