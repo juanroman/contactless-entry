@@ -25,7 +25,7 @@ namespace ContactlessEntry.Cloud.Services
             _applicationSettings = applicationSettings;
         }
 
-        public async Task<Access> RequestAccessAsync(string doorId, string personId, double temperature)
+        public Task<Access> RequestAccessAsync(string doorId, string personId, double temperature)
         {
             if (string.IsNullOrWhiteSpace(doorId))
             {
@@ -37,6 +37,11 @@ namespace ContactlessEntry.Cloud.Services
                 throw new ArgumentNullException(nameof(personId));
             }
 
+            return RequestAccessAsyncImplementation(doorId, personId, temperature);
+        }
+
+        private async Task<Access> RequestAccessAsyncImplementation(string doorId, string personId, double temperature)
+        {
             bool granted = GrantAccess(temperature);
 
             _logger.LogDebug("Storing access in database.");

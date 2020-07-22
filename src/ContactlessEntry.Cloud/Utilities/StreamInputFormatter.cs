@@ -17,13 +17,18 @@ namespace ContactlessEntry.Cloud.Utilities
             SupportedMediaTypes.Add(MediaTypeHeaderValue.Parse(MediaTypeNames.Application.Octet));
         }
 
-        public override async Task<InputFormatterResult> ReadRequestBodyAsync(InputFormatterContext context)
+        public override Task<InputFormatterResult> ReadRequestBodyAsync(InputFormatterContext context)
         {
             if (null == context)
             {
                 throw new ArgumentNullException(nameof(context));
             }
 
+            return ReadRequestBodyAsyncImplementation(context);
+        }
+
+        private static async Task<InputFormatterResult> ReadRequestBodyAsyncImplementation(InputFormatterContext context)
+        {
             var request = context.HttpContext.Request;
 
             if (!request.Body.CanSeek)
