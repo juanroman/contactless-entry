@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace ContactlessEntry.Cloud.Services
@@ -31,13 +30,18 @@ namespace ContactlessEntry.Cloud.Services
             _microserviceSettings = microserviceSettings;
         }
 
-        public async Task<IList<RecognizedCandidate>> RecognizeWithStreamAsync(Stream image)
+        public Task<IList<RecognizedCandidate>> RecognizeWithStreamAsync(Stream image)
         {
             if (null == image)
             {
                 throw new ArgumentNullException(nameof(image));
             }
 
+            return RecognizeWithStreamImplementation(image);
+        }
+
+        private async Task<IList<RecognizedCandidate>> RecognizeWithStreamImplementation(Stream image)
+        {
             var recognizedCandidateList = new List<RecognizedCandidate>();
 
             var detectedFaces = await _faceClient.Face.DetectWithStreamAsync(image, true, true, null, _microserviceSettings.RecognitionModel);
@@ -97,7 +101,7 @@ namespace ContactlessEntry.Cloud.Services
             }
         }
 
-        public async Task<Models.Person> CreatePersonAsync(string name, string faceUrl)
+        public Task<Models.Person> CreatePersonAsync(string name, string faceUrl)
         {
             if (string.IsNullOrWhiteSpace(name))
             {
@@ -109,6 +113,11 @@ namespace ContactlessEntry.Cloud.Services
                 throw new ArgumentNullException(nameof(faceUrl));
             }
 
+            return CreatePersonAsyncImplementation(name, faceUrl);
+        }
+
+        private async Task<Models.Person> CreatePersonAsyncImplementation(string name, string faceUrl)
+        {
             await EnsurePersonGroupCreated();
 
             _logger.LogDebug("Creating person in Azure Cognitive Services.");
@@ -116,14 +125,14 @@ namespace ContactlessEntry.Cloud.Services
 
             _logger.LogDebug("Adding face to newly created person in Azure Cognitive Services.");
             await _faceClient.PersonGroupPerson.AddFaceFromUrlAsync(PersonGroupId, person.PersonId, faceUrl);
-            
+
             return new Models.Person
             {
                 PersonId = $"{person.PersonId}"
             };
         }
 
-        public async Task DeletePersonAsync(string personId)
+        public Task DeletePersonAsync(string personId)
         {
             if (string.IsNullOrWhiteSpace(personId))
             {
@@ -135,13 +144,18 @@ namespace ContactlessEntry.Cloud.Services
                 throw new ArgumentException(nameof(personId));
             }
 
+            return DeletePersonAsyncImplementation(personGuid);
+        }
+
+        private async Task DeletePersonAsyncImplementation(Guid personGuid)
+        {
             await EnsurePersonGroupCreated();
 
             _logger.LogDebug("Deleting person in Azure Cognitive Services.");
             await _faceClient.PersonGroupPerson.DeleteAsync(PersonGroupId, personGuid);
         }
 
-        public async Task<Face> AddFaceAsync(string personId, string faceUrl)
+        public Task<Face> AddFaceAsync(string personId, string faceUrl)
         {
             if (string.IsNullOrWhiteSpace(personId))
             {
@@ -158,18 +172,23 @@ namespace ContactlessEntry.Cloud.Services
                 throw new ArgumentException(nameof(personId));
             }
 
+            return AddFaceAsyncImplementation(faceUrl, personGuid);
+        }
+
+        private async Task<Face> AddFaceAsyncImplementation(string faceUrl, Guid personGuid)
+        {
             await EnsurePersonGroupCreated();
 
             _logger.LogDebug("Adding face to person in Azure Cognitive Services.");
             var persistedFace = await _faceClient.PersonGroupPerson.AddFaceFromUrlAsync(PersonGroupId, personGuid, faceUrl);
-            
+
             return new Face
             {
                 FaceId = $"{persistedFace?.PersistedFaceId}"
             };
         }
 
-        public async Task RemoveFaceAsync(string personId, string faceId)
+        public Task RemoveFaceAsync(string personId, string faceId)
         {
             if (string.IsNullOrWhiteSpace(personId))
             {
@@ -191,6 +210,11 @@ namespace ContactlessEntry.Cloud.Services
                 throw new ArgumentException(nameof(faceId));
             }
 
+            return RemoveFaceAsyncImplementation(personGuid, faceGuid);
+        }
+
+        private async Task RemoveFaceAsyncImplementation(Guid personGuid, Guid faceGuid)
+        {
             await EnsurePersonGroupCreated();
 
             _logger.LogDebug("Deleting face from person in Azure Cognitive Services.");
