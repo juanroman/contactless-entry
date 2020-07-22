@@ -51,7 +51,7 @@ namespace ContactlessEntry.Cloud.UnitTests.Controllers
         }
 
         [Fact]
-        public void Authenticate_WithInvalidCredentials_ReturnsUnauthorized()
+        public void Authenticate_WithMissingApiSecret_ReturnsUnauthorized()
         {
             IMicroserviceSettings microserviceSettings = new MicroserviceSettings
             {
@@ -63,6 +63,28 @@ namespace ContactlessEntry.Cloud.UnitTests.Controllers
             {
                 ApiKey = $"{Guid.NewGuid()}",
                 ApiSecret = string.Empty
+            };
+
+            var controller = new AuthenticateController(microserviceSettings);
+            var actionResult = controller.Authenticate(dto);
+            Assert.NotNull(actionResult);
+
+            Assert.IsAssignableFrom<UnauthorizedResult>(actionResult);
+        }
+
+        [Fact]
+        public void Authenticate_WithMissingApiKey_ReturnsUnauthorized()
+        {
+            IMicroserviceSettings microserviceSettings = new MicroserviceSettings
+            {
+                JwtIssuer = $"{Guid.NewGuid()}",
+                JwtKey = $"{Guid.NewGuid()}"
+            };
+
+            var dto = new ApiCredentialsDto
+            {
+                ApiKey = string.Empty,
+                ApiSecret = $"{Guid.NewGuid()}"
             };
 
             var controller = new AuthenticateController(microserviceSettings);

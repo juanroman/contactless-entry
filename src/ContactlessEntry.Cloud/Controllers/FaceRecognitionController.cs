@@ -31,7 +31,7 @@ namespace ContactlessEntry.Cloud.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<IList<RecognizedCandidate>>> RecognizeWithStreamAsync([FromBody] Stream image)
+        public async Task<IActionResult> RecognizeWithStreamAsync([FromBody] Stream image)
         {
             try
             {
