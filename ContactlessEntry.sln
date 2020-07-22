@@ -5,7 +5,12 @@ VisualStudioVersion = 16.0.30204.135
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContactlessEntry.Cloud", "src\ContactlessEntry.Cloud\ContactlessEntry.Cloud.csproj", "{150C081F-2648-43D8-8EF1-D3576B89DD42}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContactlessEntry.Cloud.UnitTests", "tests\ContactlessEntry.Cloud.UnitTests\ContactlessEntry.Cloud.UnitTests.csproj", "{AE524AF3-9B7A-4E83-AC26-9FB2F5A912BC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ContactlessEntry.Cloud.UnitTests", "tests\ContactlessEntry.Cloud.UnitTests\ContactlessEntry.Cloud.UnitTests.csproj", "{AE524AF3-9B7A-4E83-AC26-9FB2F5A912BC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E65F4E23-2EAC-4B06-89A0-AD59AEF849F1}"
+	ProjectSection(SolutionItems) = preProject
+		coverlet.runsettings = coverlet.runsettings
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

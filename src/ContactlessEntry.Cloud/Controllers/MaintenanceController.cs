@@ -136,7 +136,7 @@ namespace ContactlessEntry.Cloud.Controllers
         [HttpGet("training")]
         [ProducesResponseType(typeof(TrainingStatus), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<ActionResult<TrainingStatus>> GetTrainingStatusAsync()
+        public async Task<IActionResult> GetTrainingStatusAsync()
         {
             try
             {
