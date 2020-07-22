@@ -22,14 +22,11 @@ namespace ContactlessEntry.Cloud.Services
         private readonly IMicroserviceSettings _microserviceSettings;
 
         public FaceClientService(
+            IFaceClient faceClient,
             ILogger<FaceClientService> logger,
             IMicroserviceSettings microserviceSettings)
         {
-            _faceClient = new FaceClient(new ApiKeyServiceClientCredentials(microserviceSettings.FaceSubscriptionKey), new DelegatingHandler[] { })
-            {
-                Endpoint = microserviceSettings.FaceApiUrl,
-            };
-
+            _faceClient = faceClient;
             _logger = logger;
             _microserviceSettings = microserviceSettings;
         }
@@ -118,15 +115,8 @@ namespace ContactlessEntry.Cloud.Services
             var person = await _faceClient.PersonGroupPerson.CreateAsync(PersonGroupId, name);
 
             _logger.LogDebug("Adding face to newly created person in Azure Cognitive Services.");
-            var persistedFace = await _faceClient.PersonGroupPerson.AddFaceFromUrlAsync(PersonGroupId, person.PersonId, faceUrl);
-            if (null == persistedFace)
-            {
-                throw new InvalidOperationException("Failed to add face on newly created person.");
-            }
-
-            _logger.LogDebug("Starting training after adding person and face in Azure Cognitive Services.");
-            //await _faceClient.PersonGroup.TrainAsync(PersonGroupId);
-
+            await _faceClient.PersonGroupPerson.AddFaceFromUrlAsync(PersonGroupId, person.PersonId, faceUrl);
+            
             return new Models.Person
             {
                 PersonId = $"{person.PersonId}"
@@ -149,9 +139,6 @@ namespace ContactlessEntry.Cloud.Services
 
             _logger.LogDebug("Deleting person in Azure Cognitive Services.");
             await _faceClient.PersonGroupPerson.DeleteAsync(PersonGroupId, personGuid);
-
-            _logger.LogDebug("Starting training after removing person from Azure Cognitive Services.");
-            // await _faceClient.PersonGroup.TrainAsync(PersonGroupId);
         }
 
         public async Task<Face> AddFaceAsync(string personId, string faceUrl)
@@ -175,18 +162,11 @@ namespace ContactlessEntry.Cloud.Services
 
             _logger.LogDebug("Adding face to person in Azure Cognitive Services.");
             var persistedFace = await _faceClient.PersonGroupPerson.AddFaceFromUrlAsync(PersonGroupId, personGuid, faceUrl);
-            if (null != persistedFace)
+            
+            return new Face
             {
-                _logger.LogDebug("Starting training after removing person from Azure Cognitive Services.");
-                //await _faceClient.PersonGroup.TrainAsync(PersonGroupId);
-
-                return new Face
-                {
-                    FaceId = $"{persistedFace.PersistedFaceId}"
-                };
-            }
-
-            throw new InvalidOperationException("Failed to add face to existing person.");
+                FaceId = $"{persistedFace?.PersistedFaceId}"
+            };
         }
 
         public async Task RemoveFaceAsync(string personId, string faceId)
@@ -215,9 +195,6 @@ namespace ContactlessEntry.Cloud.Services
 
             _logger.LogDebug("Deleting face from person in Azure Cognitive Services.");
             await _faceClient.PersonGroupPerson.DeleteFaceAsync(PersonGroupId, personGuid, faceGuid);
-
-            _logger.LogDebug("Starting training after removing face from Azure Cognitive Services.");
-            //await _faceClient.PersonGroup.TrainAsync(PersonGroupId);
         }
 
         private async Task EnsurePersonGroupCreated()

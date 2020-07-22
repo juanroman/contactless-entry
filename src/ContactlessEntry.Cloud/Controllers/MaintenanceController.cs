@@ -97,7 +97,7 @@ namespace ContactlessEntry.Cloud.Controllers
         }
 
         [HttpDelete("person/{personId}/faces/{faceId}")]
-        public async Task<IActionResult> RemoveFace(string personId, string faceId)
+        public async Task<IActionResult> RemoveFaceAsync(string personId, string faceId)
         {
             try
             {

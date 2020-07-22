@@ -1,5 +1,4 @@
 ﻿using ContactlessEntry.Cloud.Controllers;
-using ContactlessEntry.Cloud.Models;
 using ContactlessEntry.Cloud.Models.DataTransfer;
 using ContactlessEntry.Cloud.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -130,6 +129,171 @@ namespace ContactlessEntry.Cloud.UnitTests.Controllers
             await Assert.ThrowsAsync<NotImplementedException>(async () =>
             {
                 await controller.BeginTrainingAsync();
+            });
+        }
+
+        [Fact]
+        public async Task RemovePersonAsync_WithMissingInput_ReturnsBadRequest()
+        {
+            var mockLogger = Mock.Of<ILogger<MaintenanceController>>();
+            var mockFaceClientService = Mock.Of<IFaceClientService>();
+
+            var controller = new MaintenanceController(mockFaceClientService, mockLogger);
+            var actionResult = await controller.RemovePersonAsync(null);
+            Assert.NotNull(actionResult);
+            Assert.IsAssignableFrom<BadRequestResult>(actionResult);
+        }
+
+        [Fact]
+        public async Task RemovePersonAsync_WithCorrectInput_ReturnsOk()
+        {
+            var mockLogger = Mock.Of<ILogger<MaintenanceController>>();
+            var mockFaceClientService = new Mock<IFaceClientService>();
+            mockFaceClientService
+                .Setup(service => service.DeletePersonAsync(It.IsNotNull<string>()));
+
+            var controller = new MaintenanceController(mockFaceClientService.Object, mockLogger);
+            var actionResult = await controller.RemovePersonAsync($"{Guid.NewGuid()}");
+            Assert.NotNull(actionResult);
+
+            Assert.IsAssignableFrom<NoContentResult>(actionResult);
+        }
+
+        [Fact]
+        public async Task RemovePersonAsync_WithFaceClientServiceFault_ThrowsException()
+        {
+            var mockLogger = Mock.Of<ILogger<MaintenanceController>>();
+            var mockFaceClientService = new Mock<IFaceClientService>();
+            mockFaceClientService
+                .Setup(service => service.DeletePersonAsync(It.IsNotNull<string>()))
+                .Throws<NotImplementedException>();
+
+            var controller = new MaintenanceController(mockFaceClientService.Object, mockLogger);
+            await Assert.ThrowsAsync<NotImplementedException>(async () =>
+            {
+                await controller.RemovePersonAsync($"{Guid.NewGuid()}");
+            });
+        }
+
+        [Fact]
+        public async Task AddFaceAsync_WithMissingPersonId_ReturnsBadRequest()
+        {
+            var mockLogger = Mock.Of<ILogger<MaintenanceController>>();
+            var mockFaceClientService = Mock.Of<IFaceClientService>();
+
+            var controller = new MaintenanceController(mockFaceClientService, mockLogger);
+            var actionResult = await controller.AddFaceAsync(null, new FaceDto());
+            Assert.NotNull(actionResult);
+            Assert.IsAssignableFrom<BadRequestResult>(actionResult);
+        }
+
+        [Fact]
+        public async Task AddFaceAsync_WithMissingDto_ReturnsBadRequest()
+        {
+            var mockLogger = Mock.Of<ILogger<MaintenanceController>>();
+            var mockFaceClientService = Mock.Of<IFaceClientService>();
+
+            var controller = new MaintenanceController(mockFaceClientService, mockLogger);
+            var actionResult = await controller.AddFaceAsync($"{Guid.NewGuid()}", default);
+            Assert.NotNull(actionResult);
+            Assert.IsAssignableFrom<BadRequestObjectResult>(actionResult);
+        }
+
+        [Fact]
+        public async Task AddFaceAsync_WithCorrectInput_ReturnsOk()
+        {
+            var mockLogger = Mock.Of<ILogger<MaintenanceController>>();
+            var mockFaceClientService = new Mock<IFaceClientService>();
+            mockFaceClientService
+                .Setup(service => service.AddFaceAsync(It.IsNotNull<string>(), It.IsNotNull<string>()))
+                .Returns(() => Task.FromResult(new Models.Face { FaceId = $"{Guid.NewGuid()}" }));
+
+            var dto = new FaceDto
+            {
+                FaceUrl = $"http://www.google.com"
+            };
+
+            var controller = new MaintenanceController(mockFaceClientService.Object, mockLogger);
+            var actionResult = await controller.AddFaceAsync($"{Guid.NewGuid()}", dto);
+            Assert.NotNull(actionResult);
+
+            var okObjectResult = Assert.IsAssignableFrom<OkObjectResult>(actionResult);
+            Assert.IsAssignableFrom<Models.Face>(okObjectResult.Value);
+        }
+
+        [Fact]
+        public async Task AddFaceAsync_WithFaceClientServiceFault_ThrowsException()
+        {
+            var mockLogger = Mock.Of<ILogger<MaintenanceController>>();
+            var mockFaceClientService = new Mock<IFaceClientService>();
+            mockFaceClientService
+                .Setup(service => service.AddFaceAsync(It.IsNotNull<string>(), It.IsNotNull<string>()))
+                .Throws<NotImplementedException>();
+
+            var dto = new FaceDto
+            {
+                FaceUrl = $"http://www.google.com"
+            };
+
+            var controller = new MaintenanceController(mockFaceClientService.Object, mockLogger);
+            await Assert.ThrowsAsync<NotImplementedException>(async () =>
+            {
+                await controller.AddFaceAsync($"{Guid.NewGuid()}", dto);
+            });
+        }
+
+        [Fact]
+        public async Task RemoveFaceAsync_WithMissingPersonId_ReturnsBadRequest()
+        {
+            var mockLogger = Mock.Of<ILogger<MaintenanceController>>();
+            var mockFaceClientService = Mock.Of<IFaceClientService>();
+
+            var controller = new MaintenanceController(mockFaceClientService, mockLogger);
+            var actionResult = await controller.RemoveFaceAsync(null, $"{Guid.NewGuid()}");
+            Assert.NotNull(actionResult);
+            Assert.IsAssignableFrom<BadRequestResult>(actionResult);
+        }
+
+        [Fact]
+        public async Task RemoveFaceAsync_WithMissingFaceId_ReturnsBadRequest()
+        {
+            var mockLogger = Mock.Of<ILogger<MaintenanceController>>();
+            var mockFaceClientService = Mock.Of<IFaceClientService>();
+
+            var controller = new MaintenanceController(mockFaceClientService, mockLogger);
+            var actionResult = await controller.RemoveFaceAsync($"{Guid.NewGuid()}", null);
+            Assert.NotNull(actionResult);
+            Assert.IsAssignableFrom<BadRequestResult>(actionResult);
+        }
+
+        [Fact]
+        public async Task RemoveFaceAsync_WithCorrectInput_ReturnsOk()
+        {
+            var mockLogger = Mock.Of<ILogger<MaintenanceController>>();
+            var mockFaceClientService = new Mock<IFaceClientService>();
+            mockFaceClientService
+                .Setup(service => service.RemoveFaceAsync(It.IsNotNull<string>(), It.IsNotNull<string>()));
+
+            var controller = new MaintenanceController(mockFaceClientService.Object, mockLogger);
+            var actionResult = await controller.RemoveFaceAsync($"{Guid.NewGuid()}", $"{Guid.NewGuid()}");
+            Assert.NotNull(actionResult);
+
+            Assert.IsAssignableFrom<NoContentResult>(actionResult);
+        }
+
+        [Fact]
+        public async Task RemoveFaceAsync_WithFaceClientServiceFault_ThrowsException()
+        {
+            var mockLogger = Mock.Of<ILogger<MaintenanceController>>();
+            var mockFaceClientService = new Mock<IFaceClientService>();
+            mockFaceClientService
+                .Setup(service => service.RemoveFaceAsync(It.IsNotNull<string>(), It.IsNotNull<string>()))
+                .Throws<NotImplementedException>();
+
+            var controller = new MaintenanceController(mockFaceClientService.Object, mockLogger);
+            await Assert.ThrowsAsync<NotImplementedException>(async () =>
+            {
+                await controller.RemoveFaceAsync($"{Guid.NewGuid()}", $"{Guid.NewGuid()}");
             });
         }
     }

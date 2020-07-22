@@ -1,6 +1,7 @@
 ﻿using ContactlessEntry.Cloud.Controllers;
 using ContactlessEntry.Cloud.Models;
 using ContactlessEntry.Cloud.Services;
+using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -38,9 +39,8 @@ namespace ContactlessEntry.Cloud.UnitTests.Controllers
             var okObjectResult = Assert.IsAssignableFrom<OkObjectResult>(actionResult);
 
             var result = Assert.IsAssignableFrom<IList<RecognizedCandidate>>(okObjectResult.Value);
-            Assert.NotNull(result);
-            Assert.NotEmpty(result);
-            Assert.Equal(list.Count, result.Count);
+            list.Should().NotBeEmpty()
+                .And.BeEquivalentTo(result);
         }
 
         [Fact]
