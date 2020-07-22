@@ -59,7 +59,9 @@ namespace ContactlessEntry.Cloud
             });
 
             var mockRepository = new Mock<IAccessRepository>();
-            mockRepository.Setup(r => r.CreateAccessAsync(It.IsNotNull<Access>())).Returns(Task.FromResult(new Access { Timestamp = DateTime.UtcNow }));
+            mockRepository
+                .Setup(ar => ar.CreateAccessAsync(It.IsNotNull<Access>()))
+                .Returns((Access input) => Task.FromResult(input));
 
             services.AddTransient((serviceProvider) => { return new Mock<IOpenDoorService>().Object; });
             services.AddTransient((serviceProvider) => { return mockRepository.Object; });

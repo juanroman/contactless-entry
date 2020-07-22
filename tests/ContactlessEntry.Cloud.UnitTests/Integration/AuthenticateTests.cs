@@ -14,7 +14,7 @@ namespace ContactlessEntry.Cloud.UnitTests.Integration
         }
 
         [Fact]
-        public async Task AuthenticatePost_WithCorrectInput_ReturnsOk()
+        public async Task AuthenticatePost_WithHappyPath_ReturnsOk()
         {
             var dto = new
             {
