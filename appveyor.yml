@@ -7,7 +7,7 @@ environment:
   dev_settings_secret:
     secure: 8nKvKTq3+Vclrk6eUnlUlg==
   dev_settings_salt:
-    secure: 0E67V5Uy4SOYa9t0Y/ZTFyN0Aiw5ZMiS4F8TsDOjuGFeHcllvG9urB9k7hcJ4HXsfblMibEGr4lJWzuhhEnuEQ==
+    secure: YRrJx4YGJUmTWBU8+d7i2yxBC6ixUDwsW+f/pZwv43ZiePORKBXou/EoNHcE2zdAIeGY0vWTdBtdR5sfvPeIrw==
 init:
   # Good practise, because Windows line endings are different from Unix/Linux ones
   - cmd: git config --global core.autocrlf true
