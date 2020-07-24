@@ -1,8 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using System.Windows.Input;
-
-namespace ContactlessEntry.WpfFront.ViewModels
+﻿namespace ContactlessEntry.UwpFront.ViewModels
 {
     [PropertyChanged.AddINotifyPropertyChangedInterface]
     public abstract class ViewModelBase

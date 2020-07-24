@@ -1,7 +1,9 @@
 ﻿using Autofac;
+using ContactlessEntry.UwpFront.Services.Connectivity;
+using ContactlessEntry.UwpFront.ViewModels;
 using System;
 
-namespace ContactlessEntry.WpfFront.Services
+namespace ContactlessEntry.UwpFront.Services
 {
     public sealed class Locator
     {
@@ -12,6 +14,10 @@ namespace ContactlessEntry.WpfFront.Services
         public Locator()
         {
             Builder = new ContainerBuilder();
+
+            Register<IConnectivityService, ConnectivityService>();
+
+            Register<MainWindowViewModel>();
         }
 
         public ContainerBuilder Builder { get; private set; }
