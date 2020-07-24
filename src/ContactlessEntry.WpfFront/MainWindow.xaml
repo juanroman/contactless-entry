@@ -1,0 +1,39 @@
+﻿<Window x:Class="ContactlessEntry.WpfFront.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ContactlessEntry.WpfFront"
+        mc:Ignorable="d"
+        Title="Contactless Entry" Height="450" Width="450">
+    <Grid Margin="5">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*" />
+            <ColumnDefinition Width="1*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="30" />
+        </Grid.RowDefinitions>
+        <Label Grid.Column="0"
+               Grid.Row="0"
+               Content="{Binding DateTime}"
+               ContentStringFormat="ddd dd MMM   H:mm"/>
+        <Label Grid.Column="1"
+               Grid.Row="0"
+               Content="{Binding Connectivity}"
+               HorizontalAlignment="Right"/>
+        <Frame Grid.Row="1"
+               Grid.ColumnSpan="2"
+               HorizontalAlignment="Stretch" />
+        <Label Grid.Column="0"
+               Grid.Row="2"
+               Content="{Binding DoorWeather}"
+               ContentStringFormat=" {0}°"/>
+        <Label Grid.Column="1"
+               Grid.Row="2"               
+               Content="{Binding DoorName}"
+               HorizontalAlignment="Right"/>
+    </Grid>
+</Window>

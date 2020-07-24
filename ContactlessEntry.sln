@@ -14,6 +14,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "ContactlessEntry.PythonFront", "src\ContactlessEntry.PythonFront\ContactlessEntry.PythonFront.pyproj", "{CB214539-B1D2-482B-8482-D855735DC60D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContactlessEntry.WpfFront", "src\ContactlessEntry.WpfFront\ContactlessEntry.WpfFront.csproj", "{930B7B98-D24D-491C-8BF2-B289BD2C91C9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,6 +32,10 @@ Global
 		{AE524AF3-9B7A-4E83-AC26-9FB2F5A912BC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CB214539-B1D2-482B-8482-D855735DC60D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CB214539-B1D2-482B-8482-D855735DC60D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{930B7B98-D24D-491C-8BF2-B289BD2C91C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{930B7B98-D24D-491C-8BF2-B289BD2C91C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{930B7B98-D24D-491C-8BF2-B289BD2C91C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{930B7B98-D24D-491C-8BF2-B289BD2C91C9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
