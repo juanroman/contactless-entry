@@ -10,7 +10,7 @@
   <Identity
     Name="1824c4da-c6da-48b8-a460-566544f18709"
     Publisher="CN=juanroman"
-    Version="1.0.0.0" />
+    Version="0.1.0.0" />
 
   <mp:PhoneIdentity PhoneProductId="1824c4da-c6da-48b8-a460-566544f18709" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
@@ -41,10 +41,12 @@
         <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png"/>
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
       </uap:VisualElements>
+      
     </Application>
   </Applications>
 
   <Capabilities>
     <Capability Name="internetClient" />
+    <DeviceCapability Name="webcam"/>
   </Capabilities>
 </Package>

@@ -6,30 +6,18 @@ using System;
 namespace ContactlessEntry.UwpFront.ViewModels
 {
     [AddINotifyPropertyChangedInterface]
-    public class MainWindowViewModel : ViewModelBase, IDisposable
+    public class MainWindowViewModel : ViewModelBase
     {
         //private readonly DispatcherTimer _dateTimeDispatcherTimer;
-        private readonly IConnectivityService _connectivityService;
+        //private readonly IConnectivityService _connectivityService;
 
         public MainWindowViewModel()
         {
-            _connectivityService = Locator.Instance.Resolve<IConnectivityService>();
+            //_connectivityService = Locator.Instance.Resolve<IConnectivityService>();
 
             IsOnline = true;
-            DateTime = DateTime.Now;
             DoorWeather = 21.5;
             DoorName = "Polanco";
-
-            //_dateTimeDispatcherTimer = new DispatcherTimer(
-            //    TimeSpan.FromMinutes(1),
-            //    DispatcherPriority.Render,
-            //    async (sender, args) =>
-            //    {
-            //        DateTime = DateTime.Now;
-            //        IsOnline = await _connectivityService.CheckIfConnectedToInternet();
-            //    },
-            //    Application.Current.Dispatcher);
-            //_dateTimeDispatcherTimer.Start();
         }
 
         [DependsOn(nameof(IsOnline))]
@@ -37,23 +25,10 @@ namespace ContactlessEntry.UwpFront.ViewModels
 
         public bool IsOnline { get; set; }
 
-        public DateTime DateTime { get; set; }
+        public string FormattedDateTime => DateTime.Now.ToString("H:mm   ddd dd MMM");
 
         public double DoorWeather { get; set; }
 
         public string DoorName { get; set; }
-
-        public void Dispose()
-        {
-            Dispose(true);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                //_dateTimeDispatcherTimer.Stop();
-            }
-        }
     }
 }

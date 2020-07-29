@@ -1,8 +1,9 @@
-﻿using ContactlessEntry.UwpFront.Services;
-using ContactlessEntry.UwpFront.ViewModels;
+﻿using ContactlessEntry.UwpFront.Pages;
+using ContactlessEntry.UwpFront.Services;
 using System;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.ApplicationModel.Background;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -39,11 +40,15 @@ namespace ContactlessEntry.UwpFront
         /// <param name="e">Details about the launch request and process.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
-            Frame rootFrame = Window.Current.Content as Frame;
+            //var networkStateChangeTrigger = new SystemTrigger(SystemTriggerType.NetworkStateChange, false);
+
+            //string entryPoint = "ContactlessEntry.UwpFront.Tasks.NetworkStateChangeBackgroundTask";
+            //string taskName = "Network Change Background Task";
+            //RegisterBackgroundTask(entryPoint, taskName, networkStateChangeTrigger, null);
 
             // Do not repeat app initialization when the Window already has content,
             // just ensure that the window is active
-            if (rootFrame == null)
+            if (!(Window.Current.Content is Frame rootFrame))
             {
                 // Create a Frame to act as the navigation context and navigate to the first page
                 rootFrame = new Frame();
@@ -68,6 +73,7 @@ namespace ContactlessEntry.UwpFront
                     // parameter
                     rootFrame.Navigate(typeof(MainPage), e.Arguments);
                 }
+
                 // Ensure the current window is active
                 Window.Current.Activate();
             }
@@ -100,6 +106,34 @@ namespace ContactlessEntry.UwpFront
             var deferral = e.SuspendingOperation.GetDeferral();
             //TODO: Save application state and stop any background activity
             deferral.Complete();
+        }
+
+        private static BackgroundTaskRegistration RegisterBackgroundTask(string taskEntryPoint, string name, IBackgroundTrigger trigger, IBackgroundCondition condition)
+        {
+            foreach (var item in BackgroundTaskRegistration.AllTasks)
+            {
+                if (item.Value.Name == name)
+                {
+                    return (BackgroundTaskRegistration)item.Value;
+                }
+            }
+
+            var builder = new BackgroundTaskBuilder();
+            builder.Name = name;
+
+            if (!string.IsNullOrWhiteSpace(taskEntryPoint))
+            {
+                builder.TaskEntryPoint = taskEntryPoint;
+            }
+
+            builder.SetTrigger(trigger);
+
+            if (null != condition)
+            {
+                builder.AddCondition(condition);
+            }
+
+            return builder.Register();
         }
     }
 }

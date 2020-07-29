@@ -18,6 +18,7 @@ namespace ContactlessEntry.UwpFront.Services
             Register<IConnectivityService, ConnectivityService>();
 
             Register<MainWindowViewModel>();
+            Register<PermissionsViewModel>();
         }
 
         public ContainerBuilder Builder { get; private set; }

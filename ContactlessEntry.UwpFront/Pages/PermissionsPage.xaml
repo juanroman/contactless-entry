@@ -1,0 +1,31 @@
+﻿<Page
+    x:Class="ContactlessEntry.UwpFront.Pages.PermissionsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <StackPanel HorizontalAlignment="Center" 
+                VerticalAlignment="Center">
+        <TextBlock Text="We need your permission"
+                   TextAlignment="Center"
+                   Style="{ThemeResource TitleTextBlockStyle}"/>
+        <TextBlock Text="To use this app, open Privacy settings, and change the settings to allow this app to use your camera."
+                   TextAlignment="Center"
+                   Margin="10"/>
+        <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Center">
+            <Button Command="{Binding OpenSettingsCommand}"
+                    Content="Privacy Settings" 
+                    Style="{ThemeResource AccentButtonStyle}"
+                    Margin="10"
+                    Width="130"/>
+            <Button x:Name="OkButton"
+                    Content="Ok"
+                    Width="130"/>
+        </StackPanel>
+
+    </StackPanel>
+</Page>
