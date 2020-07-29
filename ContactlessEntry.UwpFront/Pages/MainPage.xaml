@@ -3,10 +3,18 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:toolkit="using:Microsoft.Toolkit.Uwp.UI.Controls"
     x:Class="ContactlessEntry.UwpFront.Pages.MainPage"
     mc:Ignorable="d"    
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+
+    <Page.Resources>
+        <Style x:Name="HighlightedFaceBoxStyle" TargetType="Rectangle">
+            <Setter Property="Fill" Value="Transparent" />
+            <Setter Property="Stroke" Value="Yellow" />
+            <Setter Property="StrokeThickness" Value="2"/>
+        </Style>
+    </Page.Resources>
+
     <Grid Margin="10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*" />
@@ -24,12 +32,17 @@
                    HorizontalAlignment="Right"/>
         <TextBlock Grid.Row="1" Grid.ColumnSpan="2"               
                    HorizontalAlignment="Stretch" />
-        <toolkit:CameraPreview Grid.Row="1" Grid.ColumnSpan="2"
-                               x:Name="CameraPreview"/>
+        <Grid Grid.Row="1" Grid.ColumnSpan="2"
+              HorizontalAlignment="Stretch"
+              VerticalAlignment="Stretch">
+            <CaptureElement x:Name="CameraPreview" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Fill" Margin="0,10,0,0" />
+            <Canvas x:Name="VisualizationCanvas" Grid.Row="0" HorizontalAlignment="Stretch" Margin="0,10,0,0" />
+        </Grid>
         <TextBlock Grid.Column="0" Grid.Row="2"
                    Text="Algo"/>
         <TextBlock Grid.Column="1" Grid.Row="2"               
                    Text="{Binding DoorName}"
                    HorizontalAlignment="Right"/>
     </Grid>
+
 </Page>
